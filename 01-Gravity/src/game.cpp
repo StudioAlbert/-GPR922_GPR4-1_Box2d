@@ -89,6 +89,11 @@ float Game::pixelsToMeters(float pixels)
 	return pixels / pixelsMetersRatio;
 }
 
+float Game::metersToPixels(float meters)
+{
+	return meters * pixelsMetersRatio;
+}
+
 sf::Vector2f Game::metersToPixels(b2Vec2 meters)
 {
 	return sf::Vector2f(meters.x * pixelsMetersRatio, -1.0f * meters.y * pixelsMetersRatio);

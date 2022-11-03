@@ -8,18 +8,19 @@ class Game;
 class Ball
 {
 public:
-	explicit Ball(Game& game_, sf::RenderWindow& window_);
+	explicit Ball(sf::RenderWindow& window_);
 
-	void init();
+	void init(b2World& world);
 	void update();
 	void render();
 	void setPixelsPosition(sf::Vector2f _pixelsPosition, sf::Vector2f _velocity);
 
-private:
-	Game& game;
+	void move(float x, float y);
 
+private:
 	sf::CircleShape shape;
 	sf::RenderWindow& window;
+	
 	b2Body* body = nullptr;
 
 };

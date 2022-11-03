@@ -4,11 +4,11 @@
 #include "ball.h"
 #include "game.h"
 
-Ball::Ball(Game& game_, sf::RenderWindow& window_) : game(game_), window(window_)
+Ball::Ball(sf::RenderWindow& window_) : window(window_)
 {
 }
 
-void Ball::init() {
+void Ball::init(b2World& world) {
 
     // Defining the shape
 	shape.setRadius(20.0f);
@@ -20,22 +20,24 @@ void Ball::init() {
     b2BodyDef bodyDef;
     bodyDef.fixedRotation = true;
     bodyDef.type = b2_dynamicBody;
+    bodyDef.linearDamping = 0.5f;
+
     b2Vec2 windowSize = Game::pixelsToMeters(window.getSize());
     bodyDef.position.Set(windowSize.x / 2.0f, windowSize.y / 2.0f);
-    body = this->game.getWorld().CreateBody(&bodyDef);
+    body = world.CreateBody(&bodyDef);
 
     // Shape of the physical (A box)
     b2CircleShape ballBox;
     ballBox.m_radius = Game::pixelsToMeters(shape.getRadius());
 
     // The fixture is what it defines the physic react
-    b2FixtureDef playerFixtureDef;
-    playerFixtureDef.shape = &ballBox;
-    playerFixtureDef.density = 1.0f;
-    playerFixtureDef.friction = 0.0f;
-    playerFixtureDef.restitution = 0.6f; // Make it bounce a little bit
+    b2FixtureDef ballFixtureDef;
+    ballFixtureDef.shape = &ballBox;
+    ballFixtureDef.density = 1.0f;
+    ballFixtureDef.friction = 10.0f;
+    ballFixtureDef.restitution = 0.6f; // Make it bounce a little bit
     //playerFixtureDef.userData.pointer = reinterpret_cast <std::uintptr_t>(&playerBoxData);
-    body->CreateFixture(&playerFixtureDef);
+    body->CreateFixture(&ballFixtureDef);
 
 }
 
@@ -50,6 +52,8 @@ void Ball::update() {
     // Set the position of the Graphic object
 	shape.setPosition(graphicPosition);
 
+    std::cout << "Ball velocity : " << body->GetLinearVelocity().x << " : " << body->GetLinearVelocity().y << " : " << body->GetLinearVelocity().Length() << std::endl;
+
 }
 
 void Ball::render() {
@@ -63,6 +67,26 @@ void Ball::setPixelsPosition(sf::Vector2f _pixelsPosition, sf::Vector2f velocity
     // Put in mouse position
     body->SetTransform(Game::pixelsToMeters(_pixelsPosition), body->GetAngle());
     // Reset the velocity (Speed)
-    b2Vec2 newb2Velocity = game.pixelsToMeters(Vector2f(magicNumber * velocity_.x, magicNumber * velocity_.y));
+    b2Vec2 newb2Velocity = Game::pixelsToMeters(Vector2f(magicNumber * velocity_.x, magicNumber * velocity_.y));
+    //b2Vec2 newb2Velocity(velocity_.x, velocity_.y);
     body->SetLinearVelocity(newb2Velocity);
+}
+
+void Ball::move(float x, float y)
+{
+    // Force position -----------------------------------------------
+    //auto position = body->GetTransform().p;
+
+    //position.x += x;
+    //position.y += y * -1;
+
+    //body->SetTransform(position, body->GetAngle());
+
+    // Set Velocity ----------------------------------------------
+    //float speed = 5.0f;
+    //body->SetLinearVelocity(b2Vec2( x * speed, speed * y * -1));
+
+    // Set forces -------------------------------------------------
+    body->ApplyForceToCenter(b2Vec2(x, y * -1), true);
+
 }

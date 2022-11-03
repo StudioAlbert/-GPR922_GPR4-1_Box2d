@@ -3,7 +3,7 @@
 const float Game::pixelsMetersRatio = 100.0f;
 
 Game::Game() :
-	theBall(*this, this->window_),
+	theBall(this->window_),
 	gravity_(0.0f, 0.0f),
 	world_(gravity_),
 	contactListener_(*this)
@@ -20,7 +20,7 @@ void Game::init() {
 	window_.setFramerateLimit(60.0f);
 
 	// Init all elements
-	theBall.init();
+	theBall.init(world_);
 
 	// Add a bouncer
 	// TOP LIMIT -------------------------------------------
@@ -130,6 +130,30 @@ void Game::loop()
 				if (event.key.code == sf::Keyboard::Space) {
 					clearBouncers();
 				}
+				if (event.key.code == sf::Keyboard::Left || event.key.code == sf::Keyboard::Right || event.key.code == sf::Keyboard::Up ||event.key.code == sf::Keyboard::Down) {
+					theBall.move(0, 0);
+				}
+
+			}
+			if (event.type == sf::Event::KeyPressed) {
+
+				if (event.key.code == sf::Keyboard::Left) {
+					theBall.move(-1, 0);
+				}
+				if (event.key.code == sf::Keyboard::Right) {
+					theBall.move(1, 0);
+				}
+				if (event.key.code == sf::Keyboard::Up) {
+					theBall.move(0, 1);
+				}
+				if (event.key.code == sf::Keyboard::Down) {
+					theBall.move(0, -1);
+				}
+				if (event.key.code == sf::Keyboard::Space) {
+
+				}
+
+
 			}
 		}
 #pragma endregion

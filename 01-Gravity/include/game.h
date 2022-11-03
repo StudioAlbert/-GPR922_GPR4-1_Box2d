@@ -20,6 +20,7 @@ public:
 	static float pixelsToMeters(float pixels);
 
 	static sf::Vector2f metersToPixels(b2Vec2 meters);
+	static float metersToPixels(float meters);
 
 	static const float pixelsMetersRatio;
 

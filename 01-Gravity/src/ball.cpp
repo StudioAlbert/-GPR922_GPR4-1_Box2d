@@ -11,7 +11,8 @@ Ball::Ball(Game& game_, sf::RenderWindow& window_) : game(game_), window(window_
 void Ball::init() {
 
     // Defining the shape
-	shape.setRadius(20.0f);
+	shape.setRadius(Game::metersToPixels(0.2f));
+	shape.setOrigin(sf::Vector2f(shape.getRadius(), shape.getRadius()));
 	shape.setFillColor(sf::Color::Red);
 	shape.setFillColor(sf::Color::Red);
 
@@ -39,8 +40,8 @@ void Ball::init() {
 
 void Ball::update() {
     
-    //std::cout << "body position [" << body->GetPosition().x << ":" << body->GetPosition().y 
-    //    << "]|shape position [" << shape.getPosition().x << ":" << shape.getPosition().y << "]" << std::endl;
+    std::cout << "body position [" << body->GetPosition().x << ":" << body->GetPosition().y 
+        << "]|shape position [" << shape.getPosition().x << ":" << shape.getPosition().y << "]" << std::endl;
     
     // Get the position of the body
     b2Vec2 bodyPos = body->GetPosition();
