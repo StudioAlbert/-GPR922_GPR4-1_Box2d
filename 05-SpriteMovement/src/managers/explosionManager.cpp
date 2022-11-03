@@ -25,7 +25,7 @@ void ExplosionManager::update()
 	}
 }
 
-void ExplosionManager::AddExplosion(sf::Vector startPos_)
+void ExplosionManager::AddExplosion(sf::Vector2f startPos_)
 {
 	m_explosions.emplace_back(std::make_unique<Explosion>(startPos_));
 }

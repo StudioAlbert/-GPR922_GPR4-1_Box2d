@@ -53,4 +53,7 @@ private:
 	Vector2f mousePressedPos_sensor, mouseReleasedPos_sensor;
 	Vector2f mousePressedPos_ball, mouseReleasedPos_ball;
 
+	sf::Time _elapsed;
+	sf::Clock _clock;
+
 };

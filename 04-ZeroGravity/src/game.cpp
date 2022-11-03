@@ -2,11 +2,7 @@
 
 const float Game::pixelsMetersRatio = 100.0f;
 
-Game::Game() :
-	theBall(this->window_),
-	gravity_(0.0f, 0.0f),
-	world_(gravity_),
-	contactListener_(*this)
+Game::Game() : theBall(this->window_), gravity_(0.0f, 0.0f), world_(gravity_), contactListener_(*this)
 {
 
 }
@@ -149,10 +145,6 @@ void Game::loop()
 				if (event.key.code == sf::Keyboard::Down) {
 					theBall.move(0, -1);
 				}
-				if (event.key.code == sf::Keyboard::Space) {
-
-				}
-
 
 			}
 		}
@@ -161,18 +153,16 @@ void Game::loop()
 
 #pragma region Physical process
 		// Updating the world with a delay
-		float timeStep = 1.0f / 60.0f;
-		int32 velocityIterations = 6;
-		int32 positionIterations = 2;
-		world_.Step(timeStep, velocityIterations, positionIterations);
+		_elapsed = _clock.restart();
+		world_.Step(_elapsed.asSeconds(), 6, 2);
 
 		// Update the elements
 		theBall.update();
-		for (auto b = windowLimits.begin(); b != windowLimits.end(); b++) {
-			b->update();
+		for (auto& b : windowLimits) {
+			b.update();
 		}
-		for (auto s = sensors.begin(); s != sensors.end(); s++) {
-			s->update();
+		for (auto& s : sensors) {
+			s.update();
 		}
 #pragma endregion
 
@@ -182,11 +172,11 @@ void Game::loop()
 		window_.clear();
 		// Render All elements
 		theBall.render();
-		for (auto b = windowLimits.begin(); b != windowLimits.end(); b++) {
-			b->render();
+		for (auto b : windowLimits) {
+			b.render();
 		}
-		for (auto s = sensors.begin(); s != sensors.end(); s++) {
-			s->render();
+		for (auto s : sensors) {
+			s.render();
 		}
 		// Display all elements
 		window_.display();

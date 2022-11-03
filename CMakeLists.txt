@@ -7,9 +7,15 @@ cmake_minimum_required (VERSION 3.8)
 project ("SAE921-GRP4100-Box2D")
 message("SOLUTION/PROJECT CMAKING " ${CMAKE_PROJECT_NAME})
 
+include_directories(../_Utilities/include/)
+file(GLOB_RECURSE PLATFORMER_SRC ../_Utilities/src/*.cpp)
+
 # Each sub-project
 set(EXECUTABLE_CUSTOM_NAME "00-Starter")
 add_subdirectory ("00-Starter")
+# Each sub-project
+set(EXECUTABLE_CUSTOM_NAME "0-Formative-Arkanoid")
+add_subdirectory ("0-Formative-Arkanoid")
 # Each sub-project
 set(EXECUTABLE_CUSTOM_NAME "01-Gravity")
 add_subdirectory ("01-Gravity")
