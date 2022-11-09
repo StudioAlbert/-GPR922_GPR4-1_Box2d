@@ -140,8 +140,4 @@ void Ball::AddForce(sf::Vector2f force)
 	_direction += force;
 }
 
-void Ball::draw(sf::RenderTarget& target, sf::RenderStates states) const
-{
-	states.transform = getTransform();
-	target.draw(_shape, states);
-}
+

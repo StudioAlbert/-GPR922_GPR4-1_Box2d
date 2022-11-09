@@ -21,6 +21,9 @@ class Asteroid : public Box2DEntity
 {
 public:
 	Asteroid(b2World& world_, sf::Vector2f size_);
+
+	Asteroid operator=(const Asteroid& other);
+
 	//~Asteroid();
 
 	void setIsDead();

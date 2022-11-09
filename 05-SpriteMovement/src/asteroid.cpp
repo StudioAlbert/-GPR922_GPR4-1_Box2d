@@ -42,6 +42,16 @@ Asteroid::Asteroid(b2World& world_, sf::Vector2f size_) : Box2DEntity(world_)
 
 }
 
+Asteroid Asteroid::operator=(const Asteroid& other)
+{
+	Asteroid a(other.m_world, sf::Vector2f(0.0f, 0.0f));
+
+	a.m_body = other.m_body;
+
+	return a;
+
+}
+
 
 //Asteroid::~Asteroid()
 //{
