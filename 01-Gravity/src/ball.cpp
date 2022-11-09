@@ -11,10 +11,10 @@ Ball::Ball(Game& game_, sf::RenderWindow& window_) : game(game_), window(window_
 void Ball::init() {
 
     // Defining the shape
-	shape.setRadius(Game::metersToPixels(0.2f));
-	shape.setOrigin(sf::Vector2f(shape.getRadius(), shape.getRadius()));
-	shape.setFillColor(sf::Color::Red);
-	shape.setFillColor(sf::Color::Red);
+	_shape.setRadius(Game::metersToPixels(0.2f));
+	_shape.setOrigin(sf::Vector2f(_shape.getRadius(), _shape.getRadius()));
+	_shape.setFillColor(sf::Color::Red);
+	_shape.setFillColor(sf::Color::Red);
 
     // Defing the box 2D elements
     b2BodyDef bodyDef;
@@ -26,7 +26,7 @@ void Ball::init() {
 
     // Shape of the physical (A box)
     b2CircleShape ballBox;
-    ballBox.m_radius = Game::pixelsToMeters(shape.getRadius());
+    ballBox.m_radius = Game::pixelsToMeters(_shape.getRadius());
 
     // The fixture is what it defines the physic react
     b2FixtureDef playerFixtureDef;
@@ -41,18 +41,18 @@ void Ball::init() {
 void Ball::update() {
     
     std::cout << "body position [" << body->GetPosition().x << ":" << body->GetPosition().y 
-        << "]|shape position [" << shape.getPosition().x << ":" << shape.getPosition().y << "]" << std::endl;
+        << "]|shape position [" << _shape.getPosition().x << ":" << _shape.getPosition().y << "]" << std::endl;
     
     // Get the position of the body
     b2Vec2 bodyPos = body->GetPosition();
     // Translate meters to pixels
     sf::Vector2f graphicPosition = Game::metersToPixels(bodyPos);
     // Set the position of the Graphic object
-	shape.setPosition(graphicPosition);
+	_shape.setPosition(graphicPosition);
 }
 
 void Ball::render() {
-	window.draw(shape);
+	window.draw(_shape);
 }
 
 void Ball::setPixelsPosition(sf::Vector2f _pixelsPosition) {

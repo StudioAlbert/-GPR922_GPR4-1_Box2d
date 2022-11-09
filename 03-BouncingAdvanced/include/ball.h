@@ -18,7 +18,7 @@ public:
 private:
 	Game& game;
 
-	sf::CircleShape shape;
+	sf::CircleShape _shape;
 	sf::RenderWindow& window;
 	b2Body* body = nullptr;
 

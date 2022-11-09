@@ -1,24 +1,24 @@
 #include "player.h"
 
+#include <iostream>
+#include <ostream>
+
 #include "SfmlToBox2d.h"
 
-constexpr float ACC_VALUE = 150.0f;
+constexpr float ACC_VALUE = 15.0f;
 constexpr float MAX_SPEED = 100.0f;
+
+using namespace Utilities;
 
 
 Player::Player(const sf::Vector2u& winSize, b2World& world) : _winSize(winSize)
 {
-
-	using namespace Utilities;
 
 	_shape = sf::RectangleShape(sf::Vector2f(60, 12));
 	_shape.setFillColor(sf::Color(75, 30, 37));
 	_shape.setOutlineColor(sf::Color(150, 60, 74));
 	_shape.setOutlineThickness(1);
 	_shape.setOrigin(_shape.getSize() * 0.5f);
-
-	_acceleration.x = 0;
-	_acceleration.y = 0;
 
 	setPosition(_winSize.x * 0.5f, _winSize.y - 40);
 
@@ -28,22 +28,23 @@ Player::Player(const sf::Vector2u& winSize, b2World& world) : _winSize(winSize)
 	bodyDef.type = b2_dynamicBody;
 	bodyDef.linearDamping = 0.5f;
 
-	b2Vec2 windowSize = Game::pixelsToMeters(window.getSize());
-	bodyDef.position.Set(windowSize.x / 2.0f, windowSize.y / 2.0f);
-	body = world.CreateBody(&bodyDef);
+	b2Vec2 windowSize = SfmlToBox2d::PixelsToMeters(_winSize);
+
+	bodyDef.position.Set(SfmlToBox2d::PixelsToMeters(getPosition().x), SfmlToBox2d::PixelsToMeters(getPosition().y));
+	_body = world.CreateBody(&bodyDef);
 
 	// Shape of the physical (A box)
-	b2CircleShape ballBox;
-	ballBox.m_radius = Game::pixelsToMeters(shape.getRadius());
+	b2PolygonShape box;
+	box.SetAsBox(SfmlToBox2d::PixelsToMeters(_shape.getSize().x * 0.5f), SfmlToBox2d::PixelsToMeters(_shape.getSize().y * 0.5f));
 
 	// The fixture is what it defines the physic react
 	b2FixtureDef ballFixtureDef;
-	ballFixtureDef.shape = &ballBox;
+	ballFixtureDef.shape = &box;
 	ballFixtureDef.density = 1.0f;
 	ballFixtureDef.friction = 10.0f;
 	ballFixtureDef.restitution = 0.6f; // Make it bounce a little bit
 	//playerFixtureDef.userData.pointer = reinterpret_cast <std::uintptr_t>(&playerBoxData);
-	body->CreateFixture(&ballFixtureDef);
+	_body->CreateFixture(&ballFixtureDef);
 
 
 }
@@ -51,23 +52,29 @@ Player::Player(const sf::Vector2u& winSize, b2World& world) : _winSize(winSize)
 void Player::Update(float timeElapsed)
 {
 
-	if (std::abs(_speed.x) < MAX_SPEED)
+	//std::cout << "body position [" << body->GetPosition().x << ":" << body->GetPosition().y
+	//	<< "]|shape position [" << shape.getPosition().x << ":" << shape.getPosition().y << "]" << std::endl;
+
+	// Get the position of the body
+	b2Vec2 bodyPos = _body->GetPosition();
+	// Translate meters to pixels
+	sf::Vector2f graphicPosition = SfmlToBox2d::MetersToPixels(bodyPos);
+
+	// Set the position of the Graphic object
+	setPosition(graphicPosition);
+
+	if (getPosition().x < _shape.getSize().x * 0.5f)
 	{
-		_speed += _acceleration * timeElapsed;
+		std::cout << "out of bounds Left" << std::endl;
+		_body->SetTransform(b2Vec2(SfmlToBox2d::PixelsToMeters(getPosition().x - _shape.getSize().x * 0.5f), _body->GetPosition().y), _body->GetAngle());
 	}
 
-	setPosition(getPosition() + _speed);
-
-	if (getPosition().x - _shape.getSize().x * 0.5f < 0)
+	if (getPosition().x > _winSize.x - _shape.getSize().x * 0.5f)
 	{
-		setPosition(_shape.getSize().x * 0.5f, getPosition().y);
-		
+		std::cout << "out of bounds Right" << std::endl;
+		_body->SetTransform(b2Vec2(SfmlToBox2d::PixelsToMeters(_winSize.x - _shape.getSize().x * 0.5f), _body->GetPosition().y), _body->GetAngle());
 	}
 
-	if (getPosition().x + _shape.getSize().x * 0.5f > _winSize.x)
-	{
-		setPosition(_winSize.x - _shape.getSize().x * 0.5f, getPosition().y);
-	}
 
 }
 
@@ -82,6 +89,11 @@ sf::FloatRect Player::GetBounds() const
 	return bounds;
 }
 
+const sf::Vector2f& Player::GetAcceleration()
+{
+	return SfmlToBox2d::MetersToPixels(_body->GetLinearVelocity());
+}
+
 
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
@@ -91,18 +103,21 @@ void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 void Player::MoveLeft()
 {
-	_acceleration.x = -ACC_VALUE;
+	_body->SetLinearVelocity(b2Vec2( - ACC_VALUE, 0));
+	_body->SetLinearDamping(0.0f);
 }
 
 void Player::MoveRight()
 {
-	_acceleration.x = ACC_VALUE;
+	_body->SetLinearVelocity(b2Vec2(ACC_VALUE, 0));
+	_body->SetLinearDamping(0.0f);
+
 }
 
 void Player::Stop()
 {
-	_acceleration.x = 0;
-	_speed.x = 0;
+	_body->SetLinearVelocity(b2Vec2(0, 0));
+	_body->SetLinearDamping(0.9f);
 }
 
 bool Player::_outOfBounds()

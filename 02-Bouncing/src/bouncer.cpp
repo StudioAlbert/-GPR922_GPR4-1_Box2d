@@ -14,9 +14,9 @@ void Bouncer::init() {
     // 2 meters long, 0,5 meters high
     b2Vec2 physicalSize(2.0f, 0.5f);
     shape.setSize(sf::Vector2f(Game::metersToPixels(physicalSize)));
+	shape.setOrigin(0.5f * shape.getSize());
 	shape.setFillColor(sf::Color::Cyan);
-	shape.setFillColor(sf::Color::Cyan);
-
+	
     // Defing the box 2D elements
     b2BodyDef bodyDef;
     bodyDef.fixedRotation = true;
@@ -28,7 +28,7 @@ void Bouncer::init() {
 
     // Shape of the physical (A box)
     b2PolygonShape bouncerBox;
-    bouncerBox.SetAsBox(physicalSize.x, physicalSize.y);
+    bouncerBox.SetAsBox(physicalSize.x / 2.0f, physicalSize.y / 2.0f);
 
     // The fixture is what it defines the physic react
     b2FixtureDef playerFixtureDef;
@@ -43,8 +43,8 @@ void Bouncer::init() {
 
 void Bouncer::update() {
     
-    std::cout << "Bouncer position [" << body->GetPosition().x << ":" << body->GetPosition().y 
-        << "]|shape position [" << shape.getPosition().x << ":" << shape.getPosition().y << "]" << std::endl;
+    //std::cout << "Bouncer position [" << body->GetPosition().x << ":" << body->GetPosition().y 
+    //    << "]|shape position [" << shape.getPosition().x << ":" << shape.getPosition().y << "]" << std::endl;
     
     // Get the position of the body
     b2Vec2 bodyPos = body->GetPosition();

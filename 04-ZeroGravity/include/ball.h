@@ -18,7 +18,7 @@ public:
 	void move(float x, float y);
 
 private:
-	sf::CircleShape shape;
+	sf::CircleShape _shape;
 	sf::RenderWindow& window;
 	
 	b2Body* body = nullptr;

@@ -3,7 +3,7 @@
 #include "data.h"
 #include "RNG.h"
 
-Game::Game() : _world(b2Vec2(0.0f, -9.8f))
+Game::Game() : _world(b2Vec2(0.0f, 0.0f))
 {
 
 	_window.create(sf::VideoMode(700, 860), "The Game");
@@ -17,7 +17,7 @@ Game::Game() : _world(b2Vec2(0.0f, -9.8f))
 	_window.setKeyRepeatEnabled(false);
 
 	_ball = Ball(_window.getSize());
-	_player = Player(_window.getSize());
+	_player = Player(_window.getSize(), _world);
 
 	_brickManager.InitiateBricks(_window.getSize());
 
@@ -145,7 +145,7 @@ void Game::Update()
 
 	_world.Step(timeElapsed, 8, 3);
 
-	_ball.Update(timeElapsed);
+	//_ball.Update(timeElapsed);
 	_player.Update(timeElapsed);
 
 	_ball.CollideBounds();

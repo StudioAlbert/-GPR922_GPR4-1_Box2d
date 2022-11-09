@@ -6,7 +6,7 @@ Game::Game() :
 	theBall(*this, this->window_),
 	theBouncer(*this, this->window_),
 	gravity_(0, -9.81f),
-	world_(gravity_)
+	_world(gravity_)
 {
 
 }
@@ -21,6 +21,8 @@ void Game::init() {
 	theBall.init();
 	theBouncer.init();
 
+	_world.SetContactListener(&_contactListener);
+	
 }
 
 void Game::loop()
@@ -60,7 +62,7 @@ void Game::loop()
 		float timeStep = 1.0f / 60.0f;
 		int32 velocityIterations = 6;
 		int32 positionIterations = 2;
-		world_.Step(timeStep, velocityIterations, positionIterations);
+		_world.Step(timeStep, velocityIterations, positionIterations);
 
 		// Update the elements
 		theBall.update();
@@ -101,3 +103,4 @@ sf::Vector2f Game::metersToPixels(b2Vec2 meters)
 {
 	return sf::Vector2f(meters.x * pixelsMetersRatio, -1.0f * meters.y * pixelsMetersRatio);
 }
+

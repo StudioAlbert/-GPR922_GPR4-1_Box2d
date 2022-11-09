@@ -18,7 +18,7 @@ class TextureManager
      * construction calls with the `new` operator.
      */
 
-protected:
+private:
     TextureManager();
 
     static TextureManager* textureManager_;

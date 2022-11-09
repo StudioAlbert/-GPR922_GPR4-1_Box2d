@@ -8,6 +8,7 @@
 
 #include "ball.h"
 #include "bouncer.h"
+#include "contactListener.h"
 
 using namespace std;
 
@@ -17,7 +18,7 @@ public:
 	void init();
 	void loop();
 
-	b2World& getWorld() { return world_; };
+	b2World& getWorld() { return _world; };
 
 	static b2Vec2 pixelsToMeters(sf::Vector2f pixels);
 	static b2Vec2 pixelsToMeters(sf::Vector2u pixels);
@@ -33,9 +34,11 @@ private:
 
 	// The physical world -------------------------------------
 	b2Vec2 gravity_;
-	b2World world_;
+	b2World _world;
 
 	Ball theBall;
 	Bouncer theBouncer;
+
+	ContactListener _contactListener;
 
 };

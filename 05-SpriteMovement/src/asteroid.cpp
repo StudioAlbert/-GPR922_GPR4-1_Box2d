@@ -7,8 +7,8 @@ Asteroid::Asteroid(b2World& world_, sf::Vector2f size_) : Box2DEntity(world_)
 
     createFixture(pixelsToMeters(size_.x), pixelsToMeters(size_.y));
 
-    TextureManager* texManager = TextureManager::Instance();
-    m_sprite.setTexture(texManager->getAsteroidTexture());
+    //TextureManager* texManager = TextureManager::Instance();
+    m_sprite.setTexture(TextureManager::Instance()->getAsteroidTexture());
 
     m_sprite.setOrigin(0.5f * texManager->getAsteroidTexture().getSize().x, 0.5f * texManager->getAsteroidTexture().getSize().y);
 

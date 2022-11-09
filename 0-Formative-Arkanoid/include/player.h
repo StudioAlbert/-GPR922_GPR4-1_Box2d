@@ -20,7 +20,7 @@ public:
 	void Update(float);
 	sf::FloatRect GetBounds() const;
 
-	const sf::Vector2f& GetAcceleration() { return _acceleration; };
+	const sf::Vector2f& GetAcceleration();
 
 protected:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
@@ -29,8 +29,6 @@ private:
 	sf::Vector2f _winSize;
 
 	sf::RectangleShape _shape;
-	sf::Vector2f _acceleration;
-	sf::Vector2f _speed;
 
 	b2Body* _body;
 
