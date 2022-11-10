@@ -9,6 +9,7 @@
 #include "ball.h"
 #include "bouncer.h"
 #include "contactListener.h"
+#include <list>
 
 using namespace std;
 
@@ -27,16 +28,19 @@ public:
 
 	static const float pixelsMetersRatio;
 
+	sf::Vector2u GetWinSize() const;
+
 private:
 
 	// The window ---------------------------------------------
 	sf::RenderWindow window_;
 
 	// The physical world -------------------------------------
-	b2Vec2 gravity_;
 	b2World _world;
 
-	Ball theBall;
+	list<Ball> _greenBalls;
+	list<Ball> _redBalls;
+
 	Bouncer theBouncer;
 
 	ContactListener _contactListener;

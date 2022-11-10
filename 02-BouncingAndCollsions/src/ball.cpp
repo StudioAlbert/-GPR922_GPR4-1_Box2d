@@ -3,13 +3,10 @@
 
 #include "ball.h"
 #include "game.h"
+#include "RNG.h"
 
 Ball::Ball(Game& game_) : _game(game_)
 {
-
-}
-
-void Ball::init(sf::RenderWindow& window){
 
     // Defining the shape
     _shape.setRadius(20.0f);
@@ -20,9 +17,12 @@ void Ball::init(sf::RenderWindow& window){
     b2BodyDef bodyDef;
     bodyDef.fixedRotation = true;
     bodyDef.type = b2_dynamicBody;
-    b2Vec2 windowSize = Game::pixelsToMeters(window.getSize());
-    bodyDef.position.Set(windowSize.x / 2.0f, windowSize.y / 2.0f);
+	bodyDef.position.Set(Game::pixelsToMeters(_game.GetWinSize()).x * 0.5f, Game::pixelsToMeters(_game.GetWinSize()).y * 0.5f);
+    //auto* m_userData = new ContactEvent(*this);
+    //bodyDef.userData.pointer = reinterpret_cast<uintptr_t>(m_userData);
+
     body = _game.getWorld().CreateBody(&bodyDef);
+    body->SetLinearVelocity(b2Vec2(Utilities::RNG::Range(-1.0f, 1.0f), Utilities::RNG::Range(-1.0f, 1.0f)));
 
     // Shape of the physical (A box)
     b2CircleShape ballBox;
@@ -35,12 +35,23 @@ void Ball::init(sf::RenderWindow& window){
     playerFixtureDef.friction = 0.0f;
     playerFixtureDef.restitution = 0.6f; // Make it bounce a little bit
 
-	playerFixtureDef.userData.pointer = reinterpret_cast <std::uintptr_t>(this);
+	ContactEvent* m_userData = new ContactEvent(*this);
+    playerFixtureDef.userData.pointer = reinterpret_cast<uintptr_t>(m_userData);
 
-    //playerFixtureDef.userData.pointer = reinterpret_cast <std::uintptr_t>(&playerBoxData);
     auto fixture = body->CreateFixture(&playerFixtureDef);
     //body->SetUserData(reinterpret_cast <std::uintptr_t>(this));
 
+}
+
+Ball::~Ball()
+{
+	_game.getWorld().DestroyBody(body);
+}
+
+Ball& Ball::operator=(const Ball& other)
+{
+	Ball ball(other);
+	return ball;
 }
 
 void Ball::update() {
@@ -64,7 +75,7 @@ void Ball::setPixelsPosition(sf::Vector2f _pixelsPosition) {
     body->SetLinearVelocity(b2Vec2(0.0f, -0.00001f));
 }
 
-void Ball::setNewColor()
+void Ball::SetNewColor()
 {
 	_shape.setFillColor(sf::Color(rand() % 255, rand() % 255, rand() % 255));
 }
@@ -73,4 +84,9 @@ void Ball::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
     //states.transform = getTransform();
     target.draw(_shape);
+}
+
+void Ball::ContactReaction()
+{
+	std::cout << "Ball::ContactReaction" << std::endl;
 }

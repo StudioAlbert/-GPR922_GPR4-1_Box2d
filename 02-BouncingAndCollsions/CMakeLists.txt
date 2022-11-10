@@ -32,9 +32,11 @@ add_custom_target(
 find_package(OpenGL REQUIRED)
 find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
 find_package(box2d CONFIG REQUIRED)
-include_directories(include/)
+#include_directories(include/)
+#file(GLOB_RECURSE PLATFORMER_SRC src/*.cpp include/*.h)
 
-file(GLOB_RECURSE PLATFORMER_SRC src/*.cpp include/*.h)
+include_directories(include/ ../_Utilities/include/)
+file(GLOB_RECURSE PLATFORMER_SRC src/*.cpp ../_Utilities/src/*.cpp)
 
 add_executable(${EXECUTABLE_CUSTOM_NAME} ${PLATFORMER_SRC})
 add_dependencies(${EXECUTABLE_CUSTOM_NAME} DataTarget-${EXECUTABLE_CUSTOM_NAME})

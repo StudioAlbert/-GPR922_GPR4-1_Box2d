@@ -3,10 +3,8 @@
 const float Game::pixelsMetersRatio = 100.0f;
 
 Game::Game() : 
-	theBall(*this),
 	theBouncer(*this, this->window_),
-	gravity_(0, -9.81f),
-	_world(gravity_)
+	_world(b2Vec2(0,0))
 {
 
 }
@@ -18,7 +16,7 @@ void Game::init() {
 	window_.setFramerateLimit(60.0f);
 
 	// Init all elements
-	theBall.init(window_);
+	//theBall.init(window_);
 	theBouncer.init();
 
 	_world.SetContactListener(&_contactListener);
@@ -51,7 +49,8 @@ void Game::loop()
 			// Mouse events ---------------------------------------------------------------------------------
 			if (event.type == sf::Event::MouseButtonReleased)
 			{
-				theBall.setPixelsPosition(sf::Vector2f(event.mouseButton.x, event.mouseButton.y));
+				_greenBalls.emplace_back(*this);
+				_redBalls.emplace_back(*this);
 			}
 		}
 #pragma endregion
@@ -65,19 +64,33 @@ void Game::loop()
 		_world.Step(timeStep, velocityIterations, positionIterations);
 
 		// Update the elements
-		theBall.update();
+
+		std::erase_if(_greenBalls, [](Ball& ball) { return ball.IsDead(); });
+		for (auto& ball : _greenBalls)
+			ball.update();
+
+		std::erase_if(_redBalls, [](Ball& ball) { return ball.IsDead(); });
+		for (auto& ball : _redBalls)
+			ball.update();
+
 		theBouncer.update();
 
 #pragma endregion
 
 
 #pragma region Graphics process
-		// Clear all background
+		// Clear all backgroundb
 		window_.clear();
 		// Render All elements
 		theBouncer.render();
+
 		// Display all elements
-		window_.draw(theBall);
+		for (auto& ball : _greenBalls)
+			window_.draw(ball);
+
+		for (auto& ball : _redBalls)
+			window_.draw(ball);
+
 		window_.display();
 #pragma endregion
 
@@ -102,5 +115,10 @@ float Game::pixelsToMeters(float pixels)
 sf::Vector2f Game::metersToPixels(b2Vec2 meters)
 {
 	return sf::Vector2f(meters.x * pixelsMetersRatio, -1.0f * meters.y * pixelsMetersRatio);
+}
+
+sf::Vector2u Game::GetWinSize() const
+{
+	return window_.getSize();
 }
 

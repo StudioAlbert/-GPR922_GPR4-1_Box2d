@@ -12,7 +12,7 @@ class Ball
 public:
 	Ball(Game& game_, sf::RenderWindow& window_);
 
-	void init();
+	//void init();
 	void update();
 	void render();
 	void setPixelsPosition(sf::Vector2f _pixelsPosition);

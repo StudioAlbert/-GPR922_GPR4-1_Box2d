@@ -24,7 +24,10 @@ void Bouncer::init() {
 
     b2Vec2 windowSize = Game::pixelsToMeters(sf::Vector2f(0.5f * window.getSize().x, window.getSize().y - 100.0f));
     bodyDef.position.Set(windowSize.x, windowSize.y);
-    body = this->game.getWorld().CreateBody(&bodyDef);
+    //auto* m_userData = new ContactEvent(*this);
+    //bodyDef.userData.pointer = reinterpret_cast<uintptr_t>(m_userData);
+
+	body = this->game.getWorld().CreateBody(&bodyDef);
 
     // Shape of the physical (A box)
     b2PolygonShape bouncerBox;
@@ -36,7 +39,10 @@ void Bouncer::init() {
     playerFixtureDef.density = 1.0f;
     playerFixtureDef.friction = 0.5f;
     playerFixtureDef.restitution = 0.6f; // Make it bounce a little bit
-    //playerFixtureDef.userData.pointer = reinterpret_cast <std::uintptr_t>(&playerBoxData);
+
+	auto* m_userData = new ContactEvent(*this);
+    playerFixtureDef.userData.pointer = reinterpret_cast<uintptr_t>(m_userData);
+
     body->CreateFixture(&playerFixtureDef);
 
 }
@@ -57,6 +63,11 @@ void Bouncer::update() {
 
 void Bouncer::render() {
 	window.draw(shape);
+}
+
+void Bouncer::ContactReaction()
+{
+	std::cout << "Bouncer has been hit" << std::endl;
 }
 
 //void Bouncer::setPixelsPosition(sf::Vector2f _pixelsPosition) {

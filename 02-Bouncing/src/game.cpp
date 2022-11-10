@@ -18,7 +18,7 @@ void Game::init() {
 	window_.setFramerateLimit(60.0f);
 
 	// Init all elements
-	theBall.init();
+	//theBall.init();
 	theBouncer.init();
 
 	_world.SetContactListener(&_contactListener);
