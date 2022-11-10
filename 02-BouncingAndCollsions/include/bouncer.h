@@ -12,7 +12,7 @@ class Bouncer
 public:
 	explicit Bouncer(Game& game_, sf::RenderWindow& window_);
 
-	void init();
+	void init(b2Vec2 size, b2Vec2 position);
 	void update();
 	void render();
 	void ContactReaction();

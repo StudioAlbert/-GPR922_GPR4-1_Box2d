@@ -4,14 +4,13 @@
 
 #include "SFML/Graphics.hpp"
 #include "box2d/box2d.h"
-#include "ContactEvent.h"
 
 class Game;
 
 class Ball : public sf::Drawable
 {
 public:
-	Ball(Game& game_);
+	Ball(sf::Vector2f pixelPos, Game& game_);
 	~Ball() override;
 
 	Ball& operator=(const Ball& other);

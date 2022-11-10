@@ -4,15 +4,15 @@
 #include "bouncer.h"
 #include "game.h"
 
-Bouncer::Bouncer(Game& game_, sf::RenderWindow& window_) : game(game_), window(window_)
+Bouncer::Bouncer( Game& game_, sf::RenderWindow& window_) : game(game_), window(window_)
 {
 }
 
-void Bouncer::init() {
+void Bouncer::init(b2Vec2 size, b2Vec2 position) {
 
     // Defining the shape
     // 2 meters long, 0,5 meters high
-    b2Vec2 physicalSize(2.0f, 0.5f);
+    b2Vec2 physicalSize(size);
     shape.setSize(sf::Vector2f(Game::metersToPixels(physicalSize)));
 	shape.setOrigin(0.5f * shape.getSize());
 	shape.setFillColor(sf::Color::Cyan);
@@ -21,9 +21,7 @@ void Bouncer::init() {
     b2BodyDef bodyDef;
     bodyDef.fixedRotation = true;
     bodyDef.type = b2BodyType::b2_staticBody; // Static !!! it does not move when something collides
-
-    b2Vec2 windowSize = Game::pixelsToMeters(sf::Vector2f(0.5f * window.getSize().x, window.getSize().y - 100.0f));
-    bodyDef.position.Set(windowSize.x, windowSize.y);
+    bodyDef.position.Set(position.x, position.y);
     //auto* m_userData = new ContactEvent(*this);
     //bodyDef.userData.pointer = reinterpret_cast<uintptr_t>(m_userData);
 

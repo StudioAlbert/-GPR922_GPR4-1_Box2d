@@ -5,7 +5,7 @@
 #include "game.h"
 #include "RNG.h"
 
-Ball::Ball(Game& game_) : _game(game_)
+Ball::Ball(sf::Vector2f pixelPos, Game& game_) : _game(game_)
 {
 
     // Defining the shape
@@ -17,7 +17,7 @@ Ball::Ball(Game& game_) : _game(game_)
     b2BodyDef bodyDef;
     bodyDef.fixedRotation = true;
     bodyDef.type = b2_dynamicBody;
-	bodyDef.position.Set(Game::pixelsToMeters(_game.GetWinSize()).x * 0.5f, Game::pixelsToMeters(_game.GetWinSize()).y * 0.5f);
+	bodyDef.position.Set(Game::pixelsToMeters(pixelPos).x, Game::pixelsToMeters(pixelPos).y);
     //auto* m_userData = new ContactEvent(*this);
     //bodyDef.userData.pointer = reinterpret_cast<uintptr_t>(m_userData);
 

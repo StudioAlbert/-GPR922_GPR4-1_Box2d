@@ -2,9 +2,12 @@
 
 const float Game::pixelsMetersRatio = 100.0f;
 
-Game::Game() : 
-	theBouncer(*this, this->window_),
-	_world(b2Vec2(0,0))
+Game::Game() :
+	_up(*this, this->window_),
+	_down(*this, this->window_),
+	_left(*this, this->window_),
+	_right(*this, this->window_),
+	_world(b2Vec2(0, 0))
 {
 
 }
@@ -17,10 +20,15 @@ void Game::init() {
 
 	// Init all elements
 	//theBall.init(window_);
-	theBouncer.init();
+	b2Vec2 winSize(pixelsToMeters(window_.getSize().x), pixelsToMeters(window_.getSize().y));
+
+	_up.init(b2Vec2(winSize.x, 1.0F), b2Vec2(winSize.x / 2.0f, 0.0F));
+	_down.init(b2Vec2(winSize.x, 1.0F), b2Vec2(winSize.x / 2.0f, -1 * winSize.y));
+	_left.init(b2Vec2(1.0F, winSize.y), b2Vec2(0.0F, -1 * winSize.y / 2.0F));
+	_right.init(b2Vec2(1.0F, winSize.y), b2Vec2(winSize.x, -1 * winSize.y / 2.0F));
 
 	_world.SetContactListener(&_contactListener);
-	
+
 }
 
 void Game::loop()
@@ -45,13 +53,15 @@ void Game::loop()
 				view.setSize(event.size.width, event.size.height);
 				window_.setView(view);
 			}
+		}
 
+
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		{
 			// Mouse events ---------------------------------------------------------------------------------
-			if (event.type == sf::Event::MouseButtonReleased)
-			{
-				_greenBalls.emplace_back(*this);
-				_redBalls.emplace_back(*this);
-			}
+			_greenBalls.emplace_back(sf::Vector2f(sf::Mouse::getPosition(window_).x, sf::Mouse::getPosition(window_).y), *this);
+
+			_redBalls.emplace_back(sf::Vector2f(sf::Mouse::getPosition(window_).x, sf::Mouse::getPosition(window_).y), *this);
 		}
 #pragma endregion
 
@@ -73,7 +83,10 @@ void Game::loop()
 		for (auto& ball : _redBalls)
 			ball.update();
 
-		theBouncer.update();
+		_up.update();
+		_down.update();
+		_left.update();
+		_right.update();
 
 #pragma endregion
 
@@ -81,8 +94,12 @@ void Game::loop()
 #pragma region Graphics process
 		// Clear all backgroundb
 		window_.clear();
+
 		// Render All elements
-		theBouncer.render();
+		_up.render();
+		_down.render();
+		_left.render();
+		_right.render();
 
 		// Display all elements
 		for (auto& ball : _greenBalls)

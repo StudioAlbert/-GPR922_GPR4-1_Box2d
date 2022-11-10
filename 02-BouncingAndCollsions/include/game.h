@@ -41,7 +41,7 @@ private:
 	list<Ball> _greenBalls;
 	list<Ball> _redBalls;
 
-	Bouncer theBouncer;
+	Bouncer _up, _down, _left, _right;
 
 	ContactListener _contactListener;
 

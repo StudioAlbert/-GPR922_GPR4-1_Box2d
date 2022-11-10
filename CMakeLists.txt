@@ -17,6 +17,9 @@ add_subdirectory ("00-Starter")
 set(EXECUTABLE_CUSTOM_NAME "0-Formative-Arkanoid")
 add_subdirectory ("0-Formative-Arkanoid")
 # Each sub-project
+set(EXECUTABLE_CUSTOM_NAME "0-Formative-Starship")
+add_subdirectory ("0-Formative-Starship")
+# Each sub-project
 set(EXECUTABLE_CUSTOM_NAME "01-Gravity")
 add_subdirectory ("01-Gravity")
 # Each sub-project
